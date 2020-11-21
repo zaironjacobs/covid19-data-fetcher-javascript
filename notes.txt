@@ -1,2 +1,2 @@
 CRONTAB RUN DATA FETCHER: "At minute 0 and 30."
-0,30 * * * * cd ~/covid19-javascript-data-fetcher/src && php run.javascript
+0,30 * * * * cd ~/covid19-javascript-data-fetcher && npm run start
