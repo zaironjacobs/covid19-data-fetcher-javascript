@@ -30,6 +30,9 @@ class App {
         this.mongoDatabase = new MongoDatabase();
     }
 
+    /**
+     * Main function for initialization
+     */
     async init() {
         console.log('Downloading data...');
         await this.downloadCsvFile();
