@@ -2,7 +2,6 @@
   "name": "covid19-data-fetcher",
   "version": "1.0.0",
   "description": "Fetch and save data of each country to a MongoDB database",
-  "main": "app.js",
   "scripts": {
     "start": "node src/run.js"
   },
