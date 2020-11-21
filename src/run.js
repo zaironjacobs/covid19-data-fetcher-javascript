@@ -1,4 +1,5 @@
 require('dotenv').config();
 const App = require('./app.js');
 
-new App().init();
+app = new App();
+app.init();
