@@ -11,7 +11,7 @@ class Country {
         this.deaths = 0;
         this.active = 0;
         this.recovered = 0;
-        this.last_updated_by_source_at = '';
+        this.last_updated_by_source_at = null;
     }
 
     setName(name) {
