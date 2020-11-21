@@ -113,10 +113,11 @@ class App {
      */
     createCountryObjects() {
         const countryNames = this.getCountryNamesArray();
+        const lastUpdatedBySourceTime = this.getLastUpdatedBySourceTime()
         countryNames.forEach(countryName => {
             const country = new Country();
             country.setName(countryName);
-            country.setLastUpdatedBySourceAt(this.getLastUpdatedBySourceTime());
+            country.setLastUpdatedBySourceAt(lastUpdatedBySourceTime);
             this.countryObjects[country.getName()] = country;
         });
     }
@@ -194,7 +195,10 @@ class App {
      */
     getLastUpdatedBySourceTime() {
         const dateString = this.csvRows[0][Constants.COL_LAST_UPDATE];
-        return new Date(dateString);
+        const date_moment = Moment(dateString);
+        return new Date(Date.UTC(
+            date_moment.year(), date_moment.month(), date_moment.date(),
+            date_moment.hours(), date_moment.minute(), date_moment.second()))
     }
 
     /**
