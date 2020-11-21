@@ -189,6 +189,8 @@ class App {
 
     /**
      * Return the last updated time of the data
+     *
+     * @return {Date}
      */
     getLastUpdatedBySourceTime() {
         const dateString = this.csvRows[0][Constants.COL_LAST_UPDATE];

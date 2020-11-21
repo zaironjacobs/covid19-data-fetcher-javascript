@@ -1,3 +1,8 @@
+/**
+ * Country class to store data of a country
+ *
+ * @author      Zairon Jacobs <zaironjacobs@gmail.com>
+ */
 class Country {
 
     constructor() {
