@@ -20,7 +20,7 @@ An example of a document:
 ```
 
 ## Dependencies
-- [Node >= 15](https://nodejs.org)
+- [Node.js >= 14](https://nodejs.org)
 
 ## Download
 ```console
