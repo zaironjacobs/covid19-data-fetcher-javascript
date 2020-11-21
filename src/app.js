@@ -134,38 +134,51 @@ class App {
      */
     populateCountryObjects() {
         this.csvRows.forEach(row => {
-            const countryName = row[Constants.COL_COUNTRY];
+                const countryName = row[Constants.COL_COUNTRY];
 
-            let deaths = parseInt(row[Constants.COL_DEATHS]);
-            if (deaths < 0) {
-                deaths = Math.abs(deaths);
+                let deaths = parseInt(row[Constants.COL_DEATHS]);
+                if (isNaN(deaths)) {
+                    deaths = 0;
+                }
+                if (deaths < 0) {
+                    deaths = Math.abs(deaths);
+                }
+                this.totalDeaths += deaths;
+
+                let confirmed = parseInt(row[Constants.COL_CONFIRMED]);
+                if (isNaN(confirmed)) {
+                    confirmed = 0;
+                }
+                if (confirmed < 0) {
+                    confirmed = Math.abs(confirmed);
+                }
+                this.totalConfirmed += confirmed;
+
+                let active = parseInt(row[Constants.COL_ACTIVE]);
+                if (isNaN(active)) {
+                    active = 0;
+                }
+                if (active < 0) {
+                    active = Math.abs(active);
+                }
+                this.totalActive += active;
+
+                let recovered = parseInt(row[Constants.COL_RECOVERED]);
+                if (isNaN(recovered)) {
+                    recovered = 0;
+                }
+                if (recovered < 0) {
+                    recovered = Math.abs(recovered);
+                }
+                this.totalRecovered += recovered;
+
+                const country = this.countryObjects[countryName];
+                country.incrementDeaths(deaths);
+                country.incrementConfirmed(confirmed);
+                country.incrementActive(active);
+                country.incrementRecovered(recovered);
             }
-            this.totalDeaths += deaths;
-
-            let confirmed = parseInt(row[Constants.COL_CONFIRMED]);
-            if (confirmed < 0) {
-                confirmed = Math.abs(confirmed);
-            }
-            this.totalConfirmed += confirmed;
-
-            let active = parseInt(row[Constants.COL_ACTIVE]);
-            if (active < 0) {
-                active = Math.abs(active);
-            }
-            this.totalActive += active;
-
-            let recovered = parseInt(row[Constants.COL_RECOVERED]);
-            if (recovered < 0) {
-                recovered = Math.abs(recovered);
-            }
-            this.totalRecovered += recovered;
-
-            const country = this.countryObjects[countryName];
-            country.incrementDeaths(deaths);
-            country.incrementConfirmed(confirmed);
-            country.incrementActive(active);
-            country.incrementRecovered(recovered);
-        });
+        );
 
         const country_worldwide = this.countryObjects[Constants.WORLDWIDE];
         country_worldwide.incrementDeaths(this.totalDeaths);
