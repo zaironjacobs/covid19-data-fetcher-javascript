@@ -1,0 +1,11 @@
+# JetBrains
+.idea/
+
+# Environment variables
+.env
+
+# Data dir
+src/data
+
+# Dependency directories
+node_modules/
