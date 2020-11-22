@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = Object.freeze({
     DATA_DIR: 'data',
     DATA_URL: 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/%s',
 
@@ -10,4 +10,4 @@ module.exports = {
     COL_RECOVERED: 'Recovered',
 
     WORLDWIDE: 'Worldwide'
-}
+});
