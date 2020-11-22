@@ -137,43 +137,31 @@ class App {
      * Populate all country objects with data retrieved from the csv file
      */
     populateCountryObjects() {
+
+        function getCaseCount(row, rowName) {
+            let caseValue = parseInt(row[rowName]);
+            if (isNaN(caseValue)) {
+                caseValue = 0;
+            }
+            if (caseValue < 0) {
+                caseValue = Math.abs(caseValue);
+            }
+            return caseValue;
+        }
+
         this.csvRows.forEach(row => {
                 const countryName = row[Constants.COL_COUNTRY];
 
-                let deaths = parseInt(row[Constants.COL_DEATHS]);
-                if (isNaN(deaths)) {
-                    deaths = 0;
-                }
-                if (deaths < 0) {
-                    deaths = Math.abs(deaths);
-                }
+                const deaths = getCaseCount(row, [Constants.COL_DEATHS]);
                 this.totalDeaths += deaths;
 
-                let confirmed = parseInt(row[Constants.COL_CONFIRMED]);
-                if (isNaN(confirmed)) {
-                    confirmed = 0;
-                }
-                if (confirmed < 0) {
-                    confirmed = Math.abs(confirmed);
-                }
+                const confirmed = getCaseCount(row, [Constants.COL_CONFIRMED]);
                 this.totalConfirmed += confirmed;
 
-                let active = parseInt(row[Constants.COL_ACTIVE]);
-                if (isNaN(active)) {
-                    active = 0;
-                }
-                if (active < 0) {
-                    active = Math.abs(active);
-                }
+                const active = getCaseCount(row, [Constants.COL_ACTIVE]);
                 this.totalActive += active;
 
-                let recovered = parseInt(row[Constants.COL_RECOVERED]);
-                if (isNaN(recovered)) {
-                    recovered = 0;
-                }
-                if (recovered < 0) {
-                    recovered = Math.abs(recovered);
-                }
+                const recovered = getCaseCount(row, [Constants.COL_RECOVERED]);
                 this.totalRecovered += recovered;
 
                 const country = this.countryObjects[countryName];
