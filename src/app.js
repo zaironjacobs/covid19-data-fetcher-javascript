@@ -138,8 +138,8 @@ class App {
      */
     populateCountryObjects() {
 
-        function getCaseCount(row, rowName) {
-            let caseValue = parseInt(row[rowName]);
+        function getCaseCount(row, columnName) {
+            let caseValue = parseInt(row[columnName]);
             if (isNaN(caseValue)) {
                 caseValue = 0;
             }
