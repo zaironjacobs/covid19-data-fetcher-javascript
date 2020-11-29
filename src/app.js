@@ -41,9 +41,7 @@ class App {
         await this.setRowsData();
         this.createCountryObjects();
         this.populateCountryObjects();
-        await this.mongoDatabase.connect();
         await this.saveDataToDb();
-        await this.mongoDatabase.close();
 
         console.log('Finished');
     }
@@ -196,11 +194,15 @@ class App {
      * Save each country object to a MongoDB database
      */
     async saveDataToDb() {
+        await this.mongoDatabase.connect();
+
         await this.mongoDatabase.dropCollection();
         const values = Object.values(this.countryObjects)
         for (const value of values) {
             await this.mongoDatabase.insert(value);
         }
+
+        await this.mongoDatabase.close();
     }
 }
 
