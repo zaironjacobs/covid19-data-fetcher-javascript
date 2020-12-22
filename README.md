@@ -30,6 +30,12 @@ $ git clone https://github.com/zaironjacobs/covid19-javascript-data-fetcher
 ## Usage
 
 Copy the file .env.example to .env and fill in the environment variables.
+A local connection example:
+```
+DATABASE=covid19
+COLLECTION=country
+CONNECTION_STRING=mongodb://localhost:27017
+```
 
 To use:
 ```console
