@@ -72,9 +72,14 @@ class App {
      */
     async downloadCsvFile() {
         const pathDataDir = Path.dirname(__filename) + '/' + Constants.DATA_DIR;
-        if (!Fs.existsSync(pathDataDir)) {
-            Fs.mkdirSync(pathDataDir);
+        if (Fs.existsSync(pathDataDir)) {
+            try {
+                Fs.rmdirSync(pathDataDir, {recursive: true});
+            } catch (err) {
+                console.error(err);
+            }
         }
+        Fs.mkdirSync(pathDataDir);
 
         const tries = 90;
         for (let i = 0; i < tries; i++) {
