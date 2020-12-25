@@ -24,7 +24,7 @@ An example of a document:
 
 ## Download
 ```console
-$ git clone https://github.com/zaironjacobs/covid19-javascript-data-fetcher
+$ git clone https://github.com/zaironjacobs/covid19-data-fetcher-javascript
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ CONNECTION_STRING=mongodb://localhost:27017
 
 To use:
 ```console
-$ cd covid19-javascript-data-fetcher
+$ cd covid19-data-fetcher-javascript
 $ npm install
 $ npm run start
 ```
