@@ -43,3 +43,10 @@ $ cd covid19-data-fetcher-javascript
 $ npm install
 $ npm run start
 ```
+
+## Crontab
+At minute 0 and 30:
+
+```
+0,30 * * * * cd ~/covid19-data-fetcher-javascript && npm run start
+```
