@@ -9,13 +9,17 @@ An example of a document:
 
 ```javascript
 {
-	"_id" : ObjectId("5fb4e9917a572a64d671bdb7"),
-	"name" : "Netherlands",
-	"confirmed" : 464205,
-	"deaths" : 8689,
-	"active" : 449005,
-	"recovered" : 6511,
-	"last_updated_by_source_at" : ISODate("2020-11-18T05:50:49Z")
+    "_id": {
+        "$oid": "60250f5b1ae25397d00c706c"
+    },
+    "name": "Netherlands",
+        "confirmed": 1027023,
+        "deaths": 14710,
+        "active": 998836,
+        "recovered": 13477,
+        "last_updated_by_source_at": {
+        "$date": "2021-02-11T05:23:55.000Z"
+    }
 }
 ```
 
