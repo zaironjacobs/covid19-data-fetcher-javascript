@@ -5,7 +5,8 @@ const {sprintf} = require('sprintf-js');
 const Path = require('path');
 const Axios = require('axios');
 const CsvToJson = require('csvtojson');
-const Country = require('./country.js');
+const Country = require('./models/country.js');
+const News = require('./models/news.js');
 const MongoDatabase = require('./mongoDatabase.js');
 
 
@@ -21,6 +22,7 @@ class App {
 
         this.csvRows = [];
         this.countryObjects = {};
+        this.newsObjects = [];
 
         this.totalDeaths = 0;
         this.totalActive = 0;
@@ -36,12 +38,16 @@ class App {
     async init() {
         console.log('Downloading data...');
         await this.downloadCsvFile();
+        await this.fetchNews();
 
         console.log('Saving data to database...');
         await this.setRowsData();
         this.createCountryObjects();
         this.populateCountryObjects();
-        await this.saveDataToDb();
+        await this.mongoDatabase.connect();
+        await this.saveNewsDataToDb();
+        await this.saveCountryDataToDb();
+        await this.mongoDatabase.close();
 
         console.log('Finished');
     }
@@ -89,7 +95,6 @@ class App {
 
             try {
                 await this.download(url);
-                console.log('Download completed: ' + this.csvFileName);
                 return;
             } catch {
                 const pathFileToDelete = Path.dirname(__filename) + '/' + Constants.DATA_DIR
@@ -192,22 +197,90 @@ class App {
         const date_moment = Moment(dateString);
         return new Date(Date.UTC(
             date_moment.year(), date_moment.month(), date_moment.date(),
-            date_moment.hours(), date_moment.minute(), date_moment.second()))
+            date_moment.hours(), date_moment.minute(), date_moment.second()));
+    }
+
+    /**
+     * Fetch news and save it to an array
+     */
+    async fetchNews() {
+        const url = sprintf(Constants.NEWS_API_URL, process.env.NEWS_API_KEY, process.env.NEWS_PAGE_SIZE);
+
+        let newsObjects = [];
+
+        await Axios.get(url)
+            .then(function (response) {
+                const articles = response.data['articles'];
+
+                articles.forEach(article => {
+                    const newsObj = new News();
+
+                    let title = '';
+                    if (article.title !== null) {
+                        title = article.title;
+                    }
+                    newsObj.setTitle(title);
+
+                    let sourceName = '';
+                    if (article.source.name !== null) {
+                        sourceName = article.source.name;
+                    }
+                    newsObj.setSourceName(sourceName);
+
+                    let author = '';
+                    if (article.author !== null) {
+                        author = article.author;
+                    }
+                    newsObj.setAuthor(author);
+
+                    let description = '';
+                    if (article.description !== null) {
+                        description = article.description;
+                    }
+                    newsObj.setDescription(description);
+
+                    let url = '';
+                    if (article.url !== null) {
+                        url = article.url;
+                    }
+                    newsObj.setUrl(url);
+
+                    const date_moment = Moment(article.publishedAt);
+                    const publishedAt = new Date(Date.UTC(
+                        date_moment.year(), date_moment.month(), date_moment.date(),
+                        date_moment.hours(), date_moment.minute(), date_moment.second()));
+                    newsObj.setPublishedAt(publishedAt);
+
+                    newsObjects.push(newsObj);
+                });
+            })
+            .catch(function (error) {
+                console.log('Error: could not fetch news');
+            });
+
+        this.newsObjects = newsObjects;
     }
 
     /**
      * Save each country object to a MongoDB database
      */
-    async saveDataToDb() {
-        await this.mongoDatabase.connect();
-
-        await this.mongoDatabase.dropCollection();
+    async saveCountryDataToDb() {
+        await this.mongoDatabase.dropCountryCollection();
         const values = Object.values(this.countryObjects)
         for (const value of values) {
-            await this.mongoDatabase.insert(value);
+            await this.mongoDatabase.insertCountry(value);
         }
+    }
 
-        await this.mongoDatabase.close();
+    /**
+     * Save each news object to a MongoDB database
+     */
+    async saveNewsDataToDb() {
+        await this.mongoDatabase.dropNewsCollection();
+        const values = this.newsObjects;
+        for (const value of values) {
+            await this.mongoDatabase.insertNews(value);
+        }
     }
 }
 

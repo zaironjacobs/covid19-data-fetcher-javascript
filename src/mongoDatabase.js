@@ -14,12 +14,21 @@ class MongoDatabase {
     }
 
     /**
-     * Insert data into the collection
+     * Insert data into the country collection
      *
      * @param {array} data
      */
-    async insert(data) {
-        await this.collection.insertOne(data);
+    async insertCountry(data) {
+        await this.countryCollection.insertOne(data);
+    }
+
+    /**
+     * Insert data into the news collection
+     *
+     * @param {array} data
+     */
+    async insertNews(data) {
+        await this.newsCollection.insertOne(data);
     }
 
     /**
@@ -29,7 +38,8 @@ class MongoDatabase {
         try {
             await this.client.connect();
             this.db = await this.client.db(process.env.DATABASE);
-            this.collection = await this.db.collection(process.env.COLLECTION);
+            this.countryCollection = await this.db.collection(process.env.COLLECTION_COUNTRY);
+            this.newsCollection = await this.db.collection(process.env.COLLECTION_NEWS);
         } catch {
             console.log('Could not connect to MongoDB database');
         }
@@ -43,11 +53,22 @@ class MongoDatabase {
     }
 
     /**
-     * Drop the collection from the MongoDB database
+     * Drop the country collection from the MongoDB database
      */
-    async dropCollection() {
+    async dropCountryCollection() {
         try {
-            await this.collection.drop();
+            await this.countryCollection.drop();
+        } catch {
+            // ignore
+        }
+    }
+
+    /**
+     * Drop the news collection from the MongoDB database
+     */
+    async dropNewsCollection() {
+        try {
+            await this.newsCollection.drop();
         } catch {
             // ignore
         }
