@@ -215,31 +215,31 @@ class App {
                 articles.forEach(article => {
                     const newsObj = new News();
 
-                    let title = '';
+                    let title = '-';
                     if (article.title !== null) {
                         title = article.title;
                     }
                     newsObj.setTitle(title);
 
-                    let sourceName = '';
+                    let sourceName = '-';
                     if (article.source.name !== null) {
                         sourceName = article.source.name;
                     }
                     newsObj.setSourceName(sourceName);
 
-                    let author = '';
+                    let author = '-';
                     if (article.author !== null) {
                         author = article.author;
                     }
                     newsObj.setAuthor(author);
 
-                    let description = '';
+                    let description = '-';
                     if (article.description !== null) {
                         description = article.description;
                     }
                     newsObj.setDescription(description);
 
-                    let url = '';
+                    let url = '-';
                     if (article.url !== null) {
                         url = article.url;
                     }
