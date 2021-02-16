@@ -37,7 +37,7 @@ class MongoDatabase {
     async connect() {
         try {
             await this.client.connect();
-            this.db = await this.client.db(process.env.DATABASE);
+            this.db = this.client.db(process.env.DATABASE);
             this.countryCollection = await this.db.collection(process.env.COLLECTION_COUNTRY);
             this.newsCollection = await this.db.collection(process.env.COLLECTION_NEWS);
         } catch {

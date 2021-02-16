@@ -1,17 +1,19 @@
-const Fs = require('fs');
-const Constants = require('./constants.js');
-const Moment = require('moment');
+const fs = require('fs');
+const moment = require('moment');
 const {sprintf} = require('sprintf-js');
-const Path = require('path');
-const Axios = require('axios');
-const CsvToJson = require('csvtojson');
+const path = require('path');
+const axios = require('axios');
+const csvToJson = require('csvtojson');
+
+const Constants = require('./constants.js');
 const Country = require('./models/country.js');
 const News = require('./models/news.js');
 const MongoDatabase = require('./mongoDatabase.js');
 
 
 /**
- * Save data from the downloaded csv file inside the data dir to a MongoDB database
+ * Fetch and save data of each country to a MongoDB database.
+ * Fetch and save news related to COVID-19 to a MongoDB database.
  *
  * @author      Zairon Jacobs <zaironjacobs@gmail.com>
  */
@@ -56,10 +58,10 @@ class App {
      * Download any file to the data dir
      */
     async download(url) {
-        const pathDataFile = Path.dirname(__filename) + '/' + Constants.DATA_DIR + '/' + this.csvFileName;
-        const writer = Fs.createWriteStream(pathDataFile);
+        const pathDataFile = path.dirname(__filename) + '/' + Constants.DATA_DIR + '/' + this.csvFileName;
+        const writer = fs.createWriteStream(pathDataFile);
 
-        const response = await Axios({
+        const response = await axios({
             url,
             method: 'GET',
             responseType: 'stream'
@@ -77,19 +79,19 @@ class App {
      * Download the csv file
      */
     async downloadCsvFile() {
-        const pathDataDir = Path.dirname(__filename) + '/' + Constants.DATA_DIR;
-        if (Fs.existsSync(pathDataDir)) {
+        const pathDataDir = path.dirname(__filename) + '/' + Constants.DATA_DIR;
+        if (fs.existsSync(pathDataDir)) {
             try {
-                Fs.rmdirSync(pathDataDir, {recursive: true});
+                fs.rmdirSync(pathDataDir, {recursive: true});
             } catch (err) {
                 console.error(err);
             }
         }
-        Fs.mkdirSync(pathDataDir);
+        fs.mkdirSync(pathDataDir);
 
         const tries = 90;
         for (let i = 0; i < tries; i++) {
-            const date_string = Moment().subtract(i, 'days').format('MM-DD-YYYY');
+            const date_string = moment().subtract(i, 'days').format('MM-DD-YYYY');
             this.csvFileName = date_string + '.csv';
             const url = sprintf(Constants.DATA_URL, this.csvFileName);
 
@@ -97,9 +99,9 @@ class App {
                 await this.download(url);
                 return;
             } catch {
-                const pathFileToDelete = Path.dirname(__filename) + '/' + Constants.DATA_DIR
+                const pathFileToDelete = path.dirname(__filename) + '/' + Constants.DATA_DIR
                     + '/' + this.csvFileName;
-                Fs.unlinkSync(pathFileToDelete);
+                fs.unlinkSync(pathFileToDelete);
             }
         }
         console.log('Download failed: Unable to find the latest csv file for the last ' + tries + ' days');
@@ -137,8 +139,8 @@ class App {
      * Retrieve all rows from the csv file inside the data dir
      */
     async setRowsData() {
-        const pathDataFile = Path.dirname(__filename) + '/' + Constants.DATA_DIR + '/' + this.csvFileName;
-        this.csvRows = await CsvToJson().fromFile(pathDataFile);
+        const pathDataFile = path.dirname(__filename) + '/' + Constants.DATA_DIR + '/' + this.csvFileName;
+        this.csvRows = await csvToJson().fromFile(pathDataFile);
     }
 
     /**
@@ -180,11 +182,11 @@ class App {
             }
         );
 
-        const country_worldwide = this.countryObjects[Constants.WORLDWIDE];
-        country_worldwide.incrementDeaths(this.totalDeaths);
-        country_worldwide.incrementConfirmed(this.totalConfirmed);
-        country_worldwide.incrementActive(this.totalActive);
-        country_worldwide.incrementRecovered(this.totalRecovered);
+        const countryWorldwide = this.countryObjects[Constants.WORLDWIDE];
+        countryWorldwide.incrementDeaths(this.totalDeaths);
+        countryWorldwide.incrementConfirmed(this.totalConfirmed);
+        countryWorldwide.incrementActive(this.totalActive);
+        countryWorldwide.incrementRecovered(this.totalRecovered);
     }
 
     /**
@@ -194,10 +196,10 @@ class App {
      */
     getLastUpdatedBySourceTime() {
         const dateString = this.csvRows[0][Constants.COL_LAST_UPDATE];
-        const date_moment = Moment(dateString);
+        const dateMoment = moment(dateString);
         return new Date(Date.UTC(
-            date_moment.year(), date_moment.month(), date_moment.date(),
-            date_moment.hours(), date_moment.minute(), date_moment.second()));
+            dateMoment.year(), dateMoment.month(), dateMoment.date(),
+            dateMoment.hours(), dateMoment.minute(), dateMoment.second()));
     }
 
     /**
@@ -208,7 +210,7 @@ class App {
 
         let newsObjects = [];
 
-        await Axios.get(url)
+        await axios.get(url)
             .then(function (response) {
                 const articles = response.data['articles'];
 
@@ -245,7 +247,7 @@ class App {
                     }
                     newsObj.setUrl(url);
 
-                    const date_moment = Moment(article.publishedAt);
+                    const date_moment = moment(article.publishedAt);
                     const publishedAt = new Date(Date.UTC(
                         date_moment.year(), date_moment.month(), date_moment.date(),
                         date_moment.hours(), date_moment.minute(), date_moment.second()));
@@ -254,7 +256,7 @@ class App {
                     newsObjects.push(newsObj);
                 });
             })
-            .catch(function (error) {
+            .catch(function () {
                 console.log('Error: could not fetch news');
             });
 

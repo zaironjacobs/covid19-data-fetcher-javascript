@@ -18,50 +18,25 @@ class News {
         this.title = title;
     }
 
-    getTitle() {
-        return this.title;
-    }
-
     setSourceName(source_name) {
         this.source_name = source_name;
-    }
-
-    getSourceName() {
-        return this.source_name;
     }
 
     setAuthor(author) {
         this.author = author;
     }
 
-    getAuthor() {
-        return this.author;
-    }
-
     setDescription(description) {
         this.description = description;
-    }
-
-    getDescription() {
-        return this.description;
     }
 
     setUrl(url) {
         this.url = url;
     }
 
-    getUrl() {
-        return this.url;
-    }
-
     setPublishedAt(published_at) {
         this.published_at = published_at;
     }
-
-    getPublishedAt() {
-        return this.published_at;
-    }
-
 }
 
 module.exports = News;
