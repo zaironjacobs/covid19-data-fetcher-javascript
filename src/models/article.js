@@ -1,9 +1,9 @@
 /**
- * News class to store news data
+ * Article class to store article data
  *
  * @author      Zairon Jacobs <zaironjacobs@gmail.com>
  */
-class News {
+class Article {
 
     constructor() {
         this.title = '';
@@ -39,5 +39,5 @@ class News {
     }
 }
 
-module.exports = News;
+module.exports = Article;
 
