@@ -1,5 +1,4 @@
 const {MongoClient} = require('mongodb');
-const mongoOptions = {useUnifiedTopology: true};
 
 
 /**
@@ -10,7 +9,7 @@ const mongoOptions = {useUnifiedTopology: true};
 class MongoDatabase {
 
     constructor() {
-        this.client = new MongoClient(process.env.CONNECTION_STRING, mongoOptions);
+        this.client = new MongoClient(process.env.CONNECTION_STRING);
     }
 
     /**
